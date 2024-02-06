@@ -10,7 +10,7 @@ from pyannote.audio import Pipeline
 
 
 class ASR:
-    def __init__(self, data_path="./asr/data"):
+    def __init__(self, data_path: str = "./asr/data"):
         self.data_path = data_path
 
         self.asr = ASRExecutor(
