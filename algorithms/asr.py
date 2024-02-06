@@ -4,10 +4,9 @@ from collections import namedtuple
 from inner.asr_executor import ASRExecutor
 from inner.text_executor import TextExecutor
 from inner.mfa_executor import MFAExecutor
+from inner.utils import text2pinyin
 
 from pyannote.audio import Pipeline
-
-from utils import text2pinyin
 
 
 class ASR:
