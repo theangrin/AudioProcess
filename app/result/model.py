@@ -6,7 +6,7 @@ from app import db
 class Result(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, nullable=False)
-    # summary = db.Column(db.Text, nullable=False)
+    summary = db.Column(db.Text, nullable=False)
     detail = db.Column(db.Text, nullable=False)
     audio_file = db.Column(db.String(255), nullable=False)
     create_time = db.Column(db.DateTime, default=datetime.now())

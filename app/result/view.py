@@ -3,16 +3,16 @@ from flask_login import current_user
 
 from algorithms.asr import ASR
 from app import db
-from app.result import analyze
+from app.result import analyze_bp
 from app.result.model import Result
 from app.user.model import User
 
 """文心一言：获取详细结果"""
 
 
-@analyze.route('/wx/detail', methods=['GET'])
+@analyze_bp.route('/wx/detail', methods=['GET'])
 def wx_detail():
-    authrization = request.form['authrization']
+    authrization = request.form['hash_string']
     path = request.form['path']
     # 数据校验
     if not authrization and not path:
@@ -33,13 +33,13 @@ def wx_detail():
     db.session.add(result)
     db.session.commit(result)
 
-    return jsonify(result.id, result.detail)
+    return jsonify({'id': result.id, 'detail': result.detail})
 
 
 """获取详细结果"""
 
 
-@analyze.route('/detail/<path:path>', methods=['GET'])
+@analyze_bp.route('/detail/<path:path>', methods=['GET'])
 def get_detail():
     # 获取路径参数
     path = request.args.get('path')
@@ -65,7 +65,7 @@ def get_detail():
 """修改详细结果"""
 
 
-@analyze.route('/detail/update', methods=['PUT'])
+@analyze_bp.route('/detail/update', methods=['PUT'])
 def update_detail():
     id =request.form['result_id']
     detail = request.form['detail']
@@ -79,4 +79,4 @@ def update_detail():
 
     db.session.commit()
 
-    return jsonify(result.id, result.detail)
+    return jsonify({'id': result.id, 'detail': result.detail})
