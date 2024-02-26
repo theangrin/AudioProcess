@@ -4,8 +4,8 @@ from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 
 login_manager = LoginManager()
-login_manager.session_protection = 'strong'
-login_manager.login_view = 'login_bp'
+login_manager.session_protection = "strong"
+login_manager.login_view = "login_bp"
 db = SQLAlchemy()
 
 
@@ -17,8 +17,11 @@ def register_bp(app):
     """
     from .user.view import login_bp
     from .result.view import analyze_bp
+    from .plugin.plugin import plugin_bp
+
     app.register_blueprint(login_bp)
     app.register_blueprint(analyze_bp)
+    app.register_blueprint(plugin_bp)
 
 
 def database(app, db):
@@ -43,5 +46,5 @@ def create_app():
         database(my_app, db)
         # 用于登录验证
         login_manager.init_app(my_app)
-        login_manager.login_view = 'login_bp.login'
+        login_manager.login_view = "login_bp.login"
     return my_app

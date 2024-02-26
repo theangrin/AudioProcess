@@ -1,0 +1,73 @@
+{
+    "ui": [
+        {
+            "operationId": "work",
+            "component": {
+                "type": "grid",
+                "children": [
+                    {
+                        "type": "grid-row",
+                        "props": {
+                            "columns": 1
+                        },
+                        "children": [
+                            {
+                                "type": "grid-col",
+                                "props": {},
+                                "children": [
+                                    {
+                                        "type": "text",
+                                        "props": {
+                                            "name": "{{log}}"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "grid-row",
+                        "props": {
+                            "columns": 1
+                        },
+                        "children": [
+                            {
+                                "type": "grid-col",
+                                "props": {},
+                                "children": [
+                                    {
+                                        "type": "markdown",
+                                        "props": {
+                                            "content": "{{content}}"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "grid-row",
+                        "props": {
+                            "columns": 1
+                        },
+                        "children": [
+                            {
+                                "type": "grid-col",
+                                "props": {},
+                                "children": [
+                                    {
+                                        "type": "text",
+                                        "props": {
+                                            "name": "{{link}}"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            "dataExtends": {}
+        }
+    ]
+}

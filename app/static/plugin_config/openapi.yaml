@@ -1,0 +1,62 @@
+openapi: 3.0.1
+info:
+    title: yujie
+    description: 语音识别系统，可以音频语音转文字，再对文本进行编辑等
+    version: "v1"
+servers:
+    - url: PLUGIN_HOST/
+paths:
+    /upload:
+        post:
+            operationId: upload
+            summary: 上传音频
+            responses:
+                "200":
+                    description: 返回上传音频文件的链接
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/upload"
+            x-return-raw:
+                description: 标记当前API请求的结果是否经过大模型，当name的值不空时，从插件结果中获取具体字段，类型必须string，直接返回，而不经过大模型。
+                mediaType: application/json
+                name: data
+                type: string
+    /work:
+        post:
+            operationId: work
+            summary: 分析音频
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/work_request"
+            responses:
+                "200":
+                    description: 音频分析结果
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/work_response"
+            x-return-raw:
+                description: 标记当前API请求的结果是否经过大模型，当name的值不空时，从插件结果中获取具体字段，类型必须string，直接返回，而不经过大模型。
+                mediaType: application/json
+                name: ui_data
+                type: string
+components:
+    schemas:
+        upload:
+            type: object
+        work_request:
+            type: object
+            required: [is_chinese, prompt]
+            properties:
+                is_chinese:
+                    type: boolean
+                    description: 用户上传音频文件的语言是否为中文，默认为true
+                prompt:
+                    type: string
+                    description: 用户对音频进行的描述，和希望对音频进行的操作
+        work_response:
+            type: object

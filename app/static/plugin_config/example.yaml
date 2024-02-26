@@ -1,0 +1,19 @@
+version: 0.0.1
+examples:
+      - context:
+          - role: user
+            content: 上传音频
+          - role: bot
+            plugin:
+              operationId: upload
+              thoughts: 这是上传音频文件的请求
+      - context:
+          - role: user
+            content: 分析音频。这是一段中文会议音频，请帮我总结会议要点。
+          - role: bot
+            plugin:
+              operationId: work
+              thoughts: 用户需要分析上传的音频
+              requestArguments:
+                is_chinese: true
+                prompt: 这是一段中文会议音频，请帮我总结会议要点。
