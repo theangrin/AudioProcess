@@ -1,8 +1,14 @@
-name: yujie_cpu
+name: sanb
 channels:
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/ 
+  - https://mirrors.ustc.edu.cn/anaconda/pkgs/free/ 
+  - rusty1s
   - pytorch
+  - open3d-admin
+  - nvidia
   - conda-forge
   - defaults
+
 dependencies:
   - ansiwrap=0.8.4=py_0
   - anyio=4.2.0=pyhd8ed1ab_0
@@ -282,7 +288,7 @@ dependencies:
       - paddlepaddle==2.6.0
       - paddlesde==0.2.5
       - paddleslim==2.6.0
-      - paddlespeech==0.0.0
+      - paddlespeech==1.4.1
       - paddlespeech-feat==0.1.0
       - pandas==2.2.0
       - parameterized==0.9.0
