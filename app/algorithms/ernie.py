@@ -1,10 +1,17 @@
 import erniebot
-
-erniebot.api_type = "aistudio"
-erniebot.access_token = "5c42c7c4f6571c7c97bbda75f3d20b17b7b4f5ea"
+from config import AlgorithmConfig
 
 
+# TODO: optimize prompt
 class Ernie:
+    def __init__(
+        self,
+        api_type: str = AlgorithmConfig.ERNIE_API_TYPE,
+        access_token: str = AlgorithmConfig.ERNIE_ACCESS_TOKEN,
+    ) -> None:
+        erniebot.api_type = api_type
+        erniebot.access_token = access_token
+
     def __call__(self, text: str):
         prompt = """
 作为文本总结专家，请对给定的会议对话文本进行总结概括，并转换为markdown格式。
