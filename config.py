@@ -6,7 +6,7 @@ class BaseConfig(object):
     TESTING = False
     VISIT_TIME = 0  # 网站访问次数
     # 数据库配置
-    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:admin@localhost/yujie_audio"
+    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://yujie:yujie@localhost/yujie_audio"
     SQLALCHEMY_TRACK_MODIFICATIONS = False  # 是否追踪数据库的修改
 
 
