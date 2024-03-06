@@ -1,5 +1,13 @@
 from app.algorithms.ernie import Ernie
 from app.algorithms.asr import ASR, Sentence, AsrResult
 from app.algorithms.fake_asr import FakeASR
+from app.algorithms.utils import extract_audio_from_video
 
-__all__ = ["Ernie", "ASR", "Sentence", "AsrResult", "FakeASR"]
+__all__ = [
+    "Ernie",
+    "ASR",
+    "Sentence",
+    "AsrResult",
+    "extract_audio_from_video",
+    "FakeASR",
+]
