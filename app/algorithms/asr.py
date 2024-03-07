@@ -44,14 +44,14 @@ class ASR:
             use_auth_token=pyannote_token,
         ).to(device)
 
-    def detect_language(self, audio_file: str) -> None:
+    def detect_language(self, audio_file: str) -> str:
         audio = whisper.load_audio(audio_file)
         audio_30s = whisper.pad_or_trim(audio)
         audio_30s_mel = whisper.log_mel_spectrogram(audio_30s).to(self.mul_model.device)
         _, probs = self.mul_model.detect_language(audio_30s_mel)
         return max(probs, key=probs.get)
 
-    def recognize_zh(self, audio_file: str) -> None:
+    def recognize_zh(self, audio_file: str) -> AsrResult:
         output: dict = self.zh_model.generate(
             input=audio_file,
             batch_size_s=300,
@@ -73,7 +73,7 @@ class ASR:
             sentences=sentences,
         )
 
-    def __whisper_postprocess(self, output, diarization):
+    def __whisper_postprocess(self, output, diarization) -> AsrResult:
         sentences = []
         num_speakers = 0
 
@@ -85,10 +85,10 @@ class ASR:
 
             s_start, s_end = segments[seg_p]["start"], segments[seg_p]["end"]
             if (
-                    seg_p < len(segments)
-                    and (min(s_end, turn.end) - max(s_start, turn.start))
-                    / (turn.end - turn.start)
-                    >= 0.5
+                seg_p < len(segments)
+                and (min(s_end, turn.end) - max(s_start, turn.start))
+                / (turn.end - turn.start)
+                >= 0.5
             ):
                 sentences.append(
                     Sentence(
@@ -106,17 +106,17 @@ class ASR:
             sentences=sentences,
         )
 
-    def recognize_en(self, audio_file: str) -> None:
+    def recognize_en(self, audio_file: str) -> AsrResult:
         output = self.en_model.transcribe(audio_file, language="en")
         diarization = self.pyannote(audio_file)
         return self.__whisper_postprocess(output, diarization)
 
-    def recognize_mul(self, audio_file: str, lang: str) -> None:
+    def recognize_mul(self, audio_file: str, lang: str) -> AsrResult:
         output = self.mul_model.transcribe(audio_file, language=lang)
         diarization = self.pyannote(audio_file)
         return self.__whisper_postprocess(output, diarization)
 
-    def __call__(self, audio_file: str) -> None:
+    def __call__(self, audio_file: str) -> AsrResult:
         lang = self.detect_language(audio_file)
         if lang == "zh":
             return self.recognize_zh(audio_file)
