@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
     title: yujie
-    description: 语音识别系统，可以音频语音转文字，再对文本进行编辑等
+    description: 音视频总结插件，用户可以上传音视频文件，获得音视频总结的结果，并对结果进行编辑等。
     version: "v1"
 servers:
     - url: PLUGIN_HOST/
@@ -9,14 +9,14 @@ paths:
     /upload:
         post:
             operationId: upload
-            summary: 上传音频
+            summary: 上传音视频文件
             responses:
                 "200":
-                    description: 返回上传音频文件的链接
+                    description: 返回用于上传音视频文件的链接
                     content:
                         application/json:
                             schema:
-                                $ref: "#/components/schemas/upload"
+                                $ref: "#/components/schemas/upload_response"
             x-return-raw:
                 description: 标记当前API请求的结果是否经过大模型，当name的值不空时，从插件结果中获取具体字段，类型必须string，直接返回，而不经过大模型。
                 mediaType: application/json
@@ -25,7 +25,7 @@ paths:
     /work:
         post:
             operationId: work
-            summary: 分析音频
+            summary: 分析音视频文件
             requestBody:
                 required: true
                 content:
@@ -42,21 +42,18 @@ paths:
             x-return-raw:
                 description: 标记当前API请求的结果是否经过大模型，当name的值不空时，从插件结果中获取具体字段，类型必须string，直接返回，而不经过大模型。
                 mediaType: application/json
-                name: ui_data
+                name: data
                 type: string
 components:
     schemas:
-        upload:
+        upload_response:
             type: object
         work_request:
             type: object
-            required: [is_chinese, prompt]
+            required: [prompt]
             properties:
-                is_chinese:
-                    type: boolean
-                    description: 用户上传音频文件的语言是否为中文，默认为true
                 prompt:
                     type: string
-                    description: 用户对音频进行的描述，和希望对音频进行的操作
+                    description: 用户对音视频进行的描述，以及希望对音频进行的操作等
         work_response:
             type: object

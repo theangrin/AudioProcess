@@ -2,18 +2,26 @@ version: 0.0.1
 examples:
       - context:
           - role: user
-            content: 上传音频
+            content: 上传音视频文件
           - role: bot
             plugin:
               operationId: upload
-              thoughts: 这是上传音频文件的请求
+              thoughts: 这是一个上传音视频文件的请求
       - context:
           - role: user
-            content: 分析音频。这是一段中文会议音频，请帮我总结会议要点。
+            content: 分析音视频文件。
           - role: bot
             plugin:
               operationId: work
-              thoughts: 用户需要分析上传的音频
+              thoughts: 用户需要分析上传的音视频，但没有具体要求
               requestArguments:
-                is_chinese: true
-                prompt: 这是一段中文会议音频，请帮我总结会议要点。
+                prompt: 分析音视频文件。
+      - context:
+          - role: user
+            content: 分析音视频文件。这是一段会议音频，请帮我总结会议要点。
+          - role: bot
+            plugin:
+              operationId: work
+              thoughts: 用户需要分析上传的音视频
+              requestArguments:
+                prompt: 分析音视频文件。这是一段中文会议音频，请帮我总结会议要点。

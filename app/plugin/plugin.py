@@ -6,6 +6,8 @@ import json
 
 from app.plugin import plugin_bp
 
+from config import PluginConfig
+
 CORS(plugin_bp, resources={r"/*": {"origins": "https://yiyan.baidu.com"}})
 
 
@@ -20,7 +22,16 @@ def upload():
     sessionidhash = request.headers.get("X-Bd-Plugin-Sessionidhash")
     return make_json_response(
         {
-            "data": f"[请点击此链接上传文件]({request.host_url}upload_file?sessionidhash={sessionidhash})"
+            "data": f"""
+[请点击此链接上传音视频文件]({PluginConfig.FRONTEND_URL}/upload_file?sessionidhash={sessionidhash})
+
+上传文件前后请不要刷新文心一言页面。
+
+上传文件后，请以“分析音视频文件。”开头，并写下你想分析的内容，比如：
+分析音视频文件。这是一段数学课程视频，请分别总结课程中的各个章节所讲的内容。
+
+若没有具体想分析的内容，可以直接回复“分析音视频文件”。
+"""
         }
     )
 
@@ -28,25 +39,37 @@ def upload():
 @plugin_bp.route("/work", methods=["POST"])
 def work():
     sessionidhash = request.headers.get("X-Bd-Plugin-Sessionidhash")
-    is_chine = request.json["is_chinese"]
     prompt = request.json["prompt"]
+    type = "audio"  # TODO audio or video
+
     return make_json_response(
         {
-            "ui_data": {
-                "log": "[测试样例]",
-                "content": """
-**会议总结**
-* **主题回顾**：讨论公司下一阶段的发展战略和市场布局。
-* **技术进展**：技术团队在人工智能和大数据领域取得显著进展，研发了智能推荐系统，优化了云计算和分布式存储，降低运营成本。
-* **市场策略**：利用智能推荐系统提升用户体验，与合作伙伴共享技术资源，定制化开发新产品和服务。
-* **财务评估**：建议制定详细的预算和财务计划，以确保投资回报。
-* **结论与行动计划**：将建议整合到公司发展战略中，制定实施计划，紧密合作推动公司发展。
-[](www.baidu.com)
-                """,
-                "link": "请打开链接以详细编辑文本：test link",
-            }
+            "data": f"""
+![音视频分析结果]({request.host_url}/image?sessionidhash={sessionidhash})
+若要获取详细分析信息，或者想进行更多操作，请点击[此链接]({PluginConfig.FRONTEND_URL}/{type}?sessionidhash={sessionidhash})。
+"""
         }
     )
+
+
+# code for ui
+#     return make_json_response(
+#         {
+#             "ui_data": {
+#                 "log": "[测试样例]",
+#                 "content": """
+# **会议总结**
+# * **主题回顾**：讨论公司下一阶段的发展战略和市场布局。
+# * **技术进展**：技术团队在人工智能和大数据领域取得显著进展，研发了智能推荐系统，优化了云计算和分布式存储，降低运营成本。
+# * **市场策略**：利用智能推荐系统提升用户体验，与合作伙伴共享技术资源，定制化开发新产品和服务。
+# * **财务评估**：建议制定详细的预算和财务计划，以确保投资回报。
+# * **结论与行动计划**：将建议整合到公司发展战略中，制定实施计划，紧密合作推动公司发展。
+# [](www.baidu.com)
+#                 """,
+#                 "link": "请打开链接以详细编辑文本：test link",
+#             }
+#         }
+#     )
 
 
 @plugin_bp.route("/logo.png")
@@ -66,11 +89,11 @@ def plugin_manifest():
         return text, 200, {"Content-Type": "application/json"}
 
 
-@plugin_bp.route("/ui.json")
-def plugin_ui():
-    with open("app/plugin/plugin_config/ui.json", encoding="utf-8") as f:
-        text = f.read()
-        return text, 200, {"Content-Type": "application/json"}
+# @plugin_bp.route("/ui.json")
+# def plugin_ui():
+#     with open("app/plugin/plugin_config/ui.json", encoding="utf-8") as f:
+#         text = f.read()
+#         return text, 200, {"Content-Type": "application/json"}
 
 
 @plugin_bp.route("/openapi.yaml")
