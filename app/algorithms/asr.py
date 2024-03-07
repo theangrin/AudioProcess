@@ -1,4 +1,5 @@
 from typing import NamedTuple
+
 import torch
 import whisper
 from funasr import AutoModel
@@ -84,10 +85,10 @@ class ASR:
 
             s_start, s_end = segments[seg_p]["start"], segments[seg_p]["end"]
             if (
-                seg_p < len(segments)
-                and (min(s_end, turn.end) - max(s_start, turn.start))
-                / (turn.end - turn.start)
-                >= 0.5
+                    seg_p < len(segments)
+                    and (min(s_end, turn.end) - max(s_start, turn.start))
+                    / (turn.end - turn.start)
+                    >= 0.5
             ):
                 sentences.append(
                     Sentence(

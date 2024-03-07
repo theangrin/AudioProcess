@@ -4,21 +4,15 @@ from app import db
 
 
 class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    token = db.Column(db.String(255), nullable=False)
+    id = db.Column(db.String(45), primary_key=True)
     create_time = db.Column(db.DateTime, default=datetime.now())
-    update_time = db.Column(db.DateTime)
     is_delete = db.Column(db.Boolean, default=False)
 
     def __str__(self):
         return self.username
 
-    def __init__(self, token):
-        self.token = token
+    def __init__(self, id):
+        self.id = id
 
     def delete(self):
         self.is_delete = 1
-
-    def update(self,token):
-        self.token=token
-        self.update_time=datetime.now()

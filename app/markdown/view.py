@@ -21,7 +21,7 @@ def update_markdown():
     markdown.file_name = file
 
     db.session.commit()
-    return jsonify({'id': markdown.id, 'detail': result.detail})
+    return jsonify({'id': markdown.id, 'detail': markdown.detail})
 
 
 """更新md文件"""
@@ -37,7 +37,7 @@ def update_markdown():
         return "error"
     # 数据库记录信息
     result = Result.query.filter_by(id=id).first()
-    result.detail = detail
+    result.audio_file = file
 
     db.session.commit()
     return jsonify({'id': result.id, 'detail': result.detail})
