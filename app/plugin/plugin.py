@@ -1,3 +1,5 @@
+import secrets
+
 from flask import request, send_file, make_response
 from flask_cors import CORS
 import json
@@ -56,7 +58,11 @@ def plugin_logo():
 def plugin_manifest():
     host = request.host_url
     with open("app/plugin/plugin_config/ai-plugin.json", encoding="utf-8") as f:
-        text = f.read().replace("PLUGIN_HOST/", host)
+        text = (
+            f.read()
+            .replace("RANDOM_ID", secrets.token_urlsafe(4))
+            .replace("PLUGIN_HOST/", host)
+        )
         return text, 200, {"Content-Type": "application/json"}
 
 

@@ -1,9 +1,9 @@
 {
     "schema_version": "v1",
-    "name_for_human": "yujie",
-    "name_for_model": "yujie",
-    "description_for_human": "语音识别系统，可以音频语音转文字，再对文本进行编辑等",
-    "description_for_model": "语音识别系统，可以音频语音转文字，再对文本进行编辑等",
+    "name_for_human": "语洁 音视频总结 RANDOM_ID",
+    "name_for_model": "语洁 音视频总结 RANDOM_ID",
+    "description_for_human": "语音识别系统，可以音视频语音转文字，再对文本进行编辑等。（名称末尾的字符为随机生成，便于不同百度账号进行测试）",
+    "description_for_model": "语音识别系统，可以音视频语音转文字，再对文本进行编辑等",
     "auth": {
         "type": "none"
     },
