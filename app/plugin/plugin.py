@@ -49,7 +49,7 @@ def work():
 
 @plugin_bp.route("/logo.png")
 def plugin_logo():
-    return send_file("app/plugin/plugin_config/logo.png", mimetype="image/png")
+    return send_file("plugin/plugin_config/logo.png", mimetype="image/png")
 
 
 @plugin_bp.route("/ai-plugin.json")
