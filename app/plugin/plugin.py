@@ -48,20 +48,20 @@ def work():
 
 @plugin_bp.route("/logo.png")
 def plugin_logo():
-    return send_file("app/static/plugin_config/logo.png", mimetype="image/png")
+    return send_file("app/plugin/plugin_config/logo.png", mimetype="image/png")
 
 
 @plugin_bp.route("/ai-plugin.json")
 def plugin_manifest():
     host = request.host_url
-    with open("app/static/plugin_config/ai-plugin.json", encoding="utf-8") as f:
+    with open("app/plugin/plugin_config/ai-plugin.json", encoding="utf-8") as f:
         text = f.read().replace("PLUGIN_HOST/", host)
         return text, 200, {"Content-Type": "application/json"}
 
 
 @plugin_bp.route("/ui.json")
 def plugin_ui():
-    with open("app/static/plugin_config/ui.json", encoding="utf-8") as f:
+    with open("app/plugin/plugin_config/ui.json", encoding="utf-8") as f:
         text = f.read()
         return text, 200, {"Content-Type": "application/json"}
 
@@ -69,13 +69,13 @@ def plugin_ui():
 @plugin_bp.route("/openapi.yaml")
 def plugin_api():
     host = request.host_url
-    with open("app/static/plugin_config/openapi.yaml", encoding="utf-8") as f:
+    with open("app/plugin/plugin_config/openapi.yaml", encoding="utf-8") as f:
         text = f.read().replace("PLUGIN_HOST/", host)
         return text, 200, {"Content-Type": "text/yaml"}
 
 
 @plugin_bp.route("/example.yaml")
 def plugin_example():
-    with open("app/static/plugin_config/example.yaml", encoding="utf-8") as f:
+    with open("app/plugin/plugin_config/example.yaml", encoding="utf-8") as f:
         text = f.read()
         return text, 200, {"Content-Type": "text/yaml"}
