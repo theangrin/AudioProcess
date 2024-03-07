@@ -92,7 +92,9 @@ def get_detail():
     # 获取用户信息
     user_id = request.headers.get('user_id')
     # 获取音频文件
-    file = request.files.get('file')
+    file = request.files.get('audioFile')
+
+    print(request.files)
 
     # 数据校验
     if not file:
