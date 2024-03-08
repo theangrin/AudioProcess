@@ -31,7 +31,7 @@ class AlgorithmConfig:
     ERNIE_ACCESS_TOKEN = "5c42c7c4f6571c7c97bbda75f3d20b17b7b4f5ea"
 
 
-class PluginConfig:
-    """插件配置类"""
+class FrontEndConfig:
+    """前端配置类"""
 
-    FRONTEND_URL = "http://127.0.0.1:4523"
+    FRONTEND_URL = "http://127.0.0.1:5173"

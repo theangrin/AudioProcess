@@ -6,7 +6,7 @@ import json
 
 from app.plugin import plugin_bp
 
-from config import PluginConfig
+from config import FrontEndConfig
 
 CORS(plugin_bp, resources={r"/*": {"origins": "https://yiyan.baidu.com"}})
 
@@ -23,7 +23,7 @@ def upload():
     return make_json_response(
         {
             "data": f"""
-[请点击此链接上传音视频文件]({PluginConfig.FRONTEND_URL}/upload_file?sessionidhash={sessionidhash})
+[请点击此链接上传音视频文件]({FrontEndConfig.FRONTEND_URL}/upload_file?sessionidhash={sessionidhash})
 
 上传文件前后请不要刷新文心一言页面。
 
@@ -46,7 +46,7 @@ def work():
         {
             "data": f"""
 ![音视频分析结果]({request.host_url}/image?sessionidhash={sessionidhash})
-若要获取详细分析信息，或者想进行更多操作，请点击[此链接]({PluginConfig.FRONTEND_URL}/{type}?sessionidhash={sessionidhash})。
+若要获取详细分析信息，或者想进行更多操作，请点击[此链接]({FrontEndConfig.FRONTEND_URL}/{type}?sessionidhash={sessionidhash})。
 """
         }
     )
