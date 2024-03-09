@@ -18,10 +18,12 @@ def register_bp(app):
     from .user.view import login_bp
     from .result.view import analyze_bp
     from .plugin.plugin import plugin_bp
+    from .work.view import work_bp
 
     app.register_blueprint(login_bp)
     app.register_blueprint(analyze_bp)
     app.register_blueprint(plugin_bp)
+    app.register_blueprint(work_bp)
 
 
 def database(app, db):

@@ -23,7 +23,7 @@ def upload():
     return make_json_response(
         {
             "data": f"""
-[请点击此链接上传音视频文件]({FrontEndConfig.FRONTEND_URL}/upload_file?sessionidhash={sessionidhash})
+[请点击此链接上传音视频文件]({FrontEndConfig.FRONTEND_URL}/upload/{sessionidhash})
 
 上传文件前后请不要刷新文心一言页面。
 
