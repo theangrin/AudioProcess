@@ -2,18 +2,20 @@ import json
 import os
 from datetime import datetime
 
-from flask import make_response
+from flask import Response, make_response
 
 from werkzeug.utils import secure_filename
 
 
-def make_json_response(data, status_code=200):
+def make_json_response(data, status_code=200) -> Response:
     response = make_response(json.dumps(data), status_code)
     response.headers["Content-Type"] = "application/json"
     return response
 
 
-def save_media(file, file_name, file_type):
+def save_media(file, file_name: str, file_type: str) -> str:
+    """return: save path"""
+
     path = os.getcwd()
 
     if file_type == "audio":
@@ -36,3 +38,18 @@ def save_media(file, file_name, file_type):
     file.save(path)
 
     return path
+
+
+def named_tuple_to_dict(obj):
+    if isinstance(obj, tuple) and hasattr(obj, "_fields"):
+        return dict(zip(obj._fields, (named_tuple_to_dict(item) for item in obj)))
+    elif isinstance(obj, list):
+        return [named_tuple_to_dict(item) for item in obj]
+    elif isinstance(obj, dict):
+        return {key: named_tuple_to_dict(value) for key, value in obj.items()}
+    else:
+        return obj
+
+
+def named_tuple_to_json_str(obj):
+    return json.dumps(named_tuple_to_dict(obj))

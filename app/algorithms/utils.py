@@ -3,6 +3,8 @@ from pathlib import Path
 
 
 def extract_audio_from_video(video_file: str):
+    """return: audio path"""
+
     path = Path(video_file)
     parent = str(path.parent)
     name = path.stem
@@ -18,6 +20,8 @@ def extract_audio_from_video(video_file: str):
             f"{parent}/{name}.aac",
         ],
     )
+
+    return f"{parent}/{name}.aac"
 
 
 if __name__ == "__main__":
