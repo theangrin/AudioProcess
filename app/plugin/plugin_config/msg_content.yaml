@@ -1,0 +1,11 @@
+work:
+  success:
+    - errCode: 0
+      actionName: 排队中
+      actionContent: 正在等待之前的任务执行完毕，请耐心等待
+    - errCode: 1
+      actionName: 处理中
+      actionContent: 正在处理任务
+    - errCode: 2
+      actionName: 任务完成
+      actionContent: 任务已完成

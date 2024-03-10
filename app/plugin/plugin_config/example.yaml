@@ -2,13 +2,6 @@ version: 0.0.1
 examples:
       - context:
           - role: user
-            content: 上传音视频文件
-          - role: bot
-            plugin:
-              operationId: upload
-              thoughts: 这是一个上传音视频文件的请求
-      - context:
-          - role: user
             content: 分析音视频文件。
           - role: bot
             plugin:

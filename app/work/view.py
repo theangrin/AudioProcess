@@ -4,12 +4,9 @@ from flask import request
 
 from app import db
 from app.work import work_bp
-from app.work.worker import Worker
+from app.work.worker import worker
 from app.work.model import Work
 from app.work.utils import save_media, make_json_response
-
-
-worker = Worker()
 
 
 @work_bp.route("/upload", methods=["POST"])

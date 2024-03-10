@@ -11,7 +11,9 @@
         "type": "openapi",
         "url": "PLUGIN_HOST/openapi.yaml"
     },
-    "example": "PLUGIN_HOST/example.yaml",
+    "examples": {
+        "url": "PLUGIN_HOST/example.yaml"
+    },
     "logo_url": "PLUGIN_HOST/logo.png",
     "contact_email": "support@example.com",
     "legal_info_url": "http://www.example.com/legal"

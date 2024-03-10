@@ -50,3 +50,6 @@ class Worker:
             result = self.result_dict.get(session_id)
             del self.result_dict[session_id]
         return result
+
+
+worker = Worker()

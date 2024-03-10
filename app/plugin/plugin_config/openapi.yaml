@@ -6,22 +6,6 @@ info:
 servers:
     - url: PLUGIN_HOST/
 paths:
-    /upload:
-        post:
-            operationId: upload
-            summary: 上传音视频文件
-            responses:
-                "200":
-                    description: 返回用于上传音视频文件的链接
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/upload_response"
-            x-return-raw:
-                description: 标记当前API请求的结果是否经过大模型，当name的值不空时，从插件结果中获取具体字段，类型必须string，直接返回，而不经过大模型。
-                mediaType: application/json
-                name: data
-                type: string
     /work:
         post:
             operationId: work
@@ -46,8 +30,6 @@ paths:
                 type: string
 components:
     schemas:
-        upload_response:
-            type: object
         work_request:
             type: object
             required: [prompt]
