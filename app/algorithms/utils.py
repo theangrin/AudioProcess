@@ -14,14 +14,14 @@ def extract_audio_from_video(video_file: str):
             "ffmpeg",
             "-i",
             video_file,
-            "-vn",
-            "-acodec",
-            "copy",
-            f"{parent}/{name}.aac",
+            # "-vn",
+            # "-acodec",
+            # "copy",
+            f"{parent}/{name}.mp3",
         ],
     )
 
-    return f"{parent}/{name}.aac"
+    return f"{parent}/{name}.mp3"
 
 
 if __name__ == "__main__":
