@@ -1,6 +1,7 @@
 import os
 
-from flask import request
+from flask import request, send_file
+from flask_cors import CORS
 
 from app import db
 from app.work import work_bp
@@ -8,10 +9,18 @@ from app.work.worker import worker
 from app.work.model import Work
 from app.work.utils import save_media, make_json_response
 
+from config import FrontEndConfig
 
-@work_bp.route("/upload", methods=["POST"])
+CORS(
+    work_bp,
+    resources={r"/*": {"origins": FrontEndConfig.FRONTEND_URL}},
+    allow_headers="session-id",
+)
+
+
+@work_bp.route("/upload_media", methods=["POST"])
 def upload_file():
-    session_id = request.form.get("session_id")
+    session_id = request.headers.get("session-id")
     file = request.files.get("media_file")
 
     if not file:
@@ -31,3 +40,24 @@ def upload_file():
     worker.add_task(session_id, file_path, file_type)
 
     return make_json_response({"ok": True}, 200)
+
+
+@work_bp.route("/get_media", methods=["GET"])
+def get_media():
+    session_id = request.headers.get("session-id")
+    work = Work.query.filter_by(session_id=session_id).first()
+    return send_file(work.file_path)
+
+
+@work_bp.route("/get_detail", methods=["GET"])
+def get_detail():
+    session_id = request.headers.get("session-id")
+    work = Work.query.filter_by(session_id=session_id).first()
+    return make_json_response(work.detail, 200)
+
+
+@work_bp.route("/get_markdown", methods=["GET"])
+def get_markdown():
+    session_id = request.headers.get("session-id")
+    work = Work.query.filter_by(session_id=session_id).first()
+    return make_json_response({"data": work.markdown}, 200)
