@@ -9,9 +9,12 @@ from werkzeug.utils import secure_filename
 
 from app import db
 from app.algorithms import ASR
+from app.algorithms.ernie import ernie
+from app.plugin.plugin import make_json_response
 from app.result import analyze_bp
 from app.result.model import Result
 from app.user.view import judge_user
+from config import FrontEndConfig
 
 
 @analyze_bp.route("/test", methods=["GET"])
@@ -48,7 +51,6 @@ def save_audio(file, file_name):
 """文心一言：获取详细结果"""
 
 
-# TODO 服务器相关
 @analyze_bp.route("/wx/detail", methods=["GET"])
 def wx_detail():
     file_path = request.form["path"]
@@ -84,6 +86,56 @@ def wx_detail():
     return jsonify({"id": result.id, "detail": result.detail})
 
 
+# 受文心一言本身限制，接口合并
+@analyze_bp.route("/work", methods=["POST"])
+def work():
+    # session_id = request.headers.get("X-Bd-Plugin-Sessionidhash")
+    # result_id = request.headers.get("result_id")
+    session_id='test'
+    result_id = 0
+    print(session_id)
+    print(result_id)
+    if not result_id:
+        # 如果没有结果，则为第一次调用接口，需要先上传音频文件
+        return make_json_response(
+            {
+                "data": f"""
+        [请点击此链接上传音视频文件]({FrontEndConfig.FRONTEND_URL}/upload/{session_id})
+
+        上传文件前后请不要刷新文心一言页面。
+
+        上传文件后，请以“分析音视频文件。”开头，并写下你想分析的内容，比如：
+        分析音视频文件。这是一段数学课程视频，请分别总结课程中的各个章节所讲的内容。
+
+        若没有具体想分析的内容，可以直接回复“分析音视频文件”。
+            """
+            }
+        )
+    else:
+        # 分析结果并返回概要信息和result_id
+        # result = Result.query.filter_by(user_id=session_id).first()
+        result = Result.query.filter_by(id=result_id).first()
+
+        prompt = request.json["prompt"]
+
+        # 文心一言分析概要
+        result.summary = ernie(result.detail, prompt)
+
+        db.session.commit()
+
+        return make_json_response(
+            {
+                "data": f"""
+{result.summary}
+
+✨（｡ӧ◡ӧ｡）💫
+
+若要获取详细分析信息，或者想进行更多操作，请点击[此链接]({FrontEndConfig.FRONTEND_URL}/{work.file_type}/{session_id})。
+    """
+            }
+        )
+
+
 """网站：获取详细结果"""
 
 
@@ -103,6 +155,7 @@ def get_detail():
     # 临时保存音频
     file_path = save_audio(file, file.filename)
 
+    # 调用算法
     asr = ASR()
     detail = asr(file_path)
 

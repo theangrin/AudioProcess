@@ -16,4 +16,6 @@ if __name__ == "__main__":
     app.config["REDIS_URL"] = "redis://localhost"
 
     # app.run(host='localhost',debug=True, port=4523)
-    app.run(debug=True, port=4523)
+    # app.run(debug=True, port=4523,host='175.24.200.191')
+    app.run(debug=True, port=5173,host='127.0.0.1')
+    # app.run(debug=True, port=5173)
