@@ -6,7 +6,7 @@ info:
 servers:
     - url: PLUGIN_HOST/
 paths:
-    /work:
+    /api/work:
         post:
             operationId: work
             summary: 分析音视频文件

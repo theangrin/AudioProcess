@@ -16,6 +16,10 @@ from app.result.model import Result
 from app.user.view import judge_user
 from config import FrontEndConfig
 
+from flask_cors import CORS
+
+CORS(analyze_bp, resources={r"/*": {"origins": "https://yiyan.baidu.com"}})
+
 
 @analyze_bp.route("/test", methods=["GET"])
 def test():
@@ -27,11 +31,11 @@ def save_audio(file, file_name):
     data, samplerate = soundfile.read(file)
 
     current_path = os.getcwd()
-    audio_package = os.path.join(current_path, 'audio')
+    audio_package = os.path.join(current_path, "audio")
     if not os.path.exists(audio_package):
         os.mkdir(audio_package)
 
-    current_time = datetime.now().strftime('%Y-%m-%d')
+    current_time = datetime.now().strftime("%Y-%m-%d")
     time_package = os.path.join(audio_package, current_time)
     if not os.path.exists(time_package):
         os.mkdir(time_package)
@@ -70,7 +74,7 @@ def wx_detail():
 
     # 临时保存音频
     file_name = os.path.basename(unquote(urlparse(file_path).path))
-    with open(file_name, 'wb') as file:
+    with open(file_name, "wb") as file:
         file.write(response.content)
         file_path = save_audio(file, file_name)
 
@@ -91,7 +95,7 @@ def wx_detail():
 def work():
     # session_id = request.headers.get("X-Bd-Plugin-Sessionidhash")
     # result_id = request.headers.get("result_id")
-    session_id='test'
+    session_id = "test"
     result_id = 0
     print(session_id)
     print(result_id)
@@ -100,15 +104,14 @@ def work():
         return make_json_response(
             {
                 "data": f"""
-        [请点击此链接上传音视频文件]({FrontEndConfig.FRONTEND_URL}/upload/{session_id})
+[请点击此链接上传音视频文件]({FrontEndConfig.FRONTEND_URL}/upload/{session_id})
 
-        上传文件前后请不要刷新文心一言页面。
+上传文件前后请不要刷新文心一言页面。
 
-        上传文件后，请以“分析音视频文件。”开头，并写下你想分析的内容，比如：
-        分析音视频文件。这是一段数学课程视频，请分别总结课程中的各个章节所讲的内容。
+上传文件后，请以“分析音视频文件。”开头，并写下你想分析的内容，比如：
+分析音视频文件。这是一段数学课程视频，请分别总结课程中的各个章节所讲的内容。
 
-        若没有具体想分析的内容，可以直接回复“分析音视频文件”。
-            """
+若没有具体想分析的内容，可以直接回复“分析音视频文件”。"""
             }
         )
     else:
@@ -142,9 +145,9 @@ def work():
 @analyze_bp.route("/result/detail", methods=["POST"])
 def get_detail():
     # 获取用户信息
-    user_id = request.headers.get('user_id')
+    user_id = request.headers.get("user_id")
     # 获取音频文件
-    file = request.files.get('audioFile')
+    file = request.files.get("audioFile")
 
     print(request.files)
 
@@ -173,7 +176,7 @@ def get_detail():
 @analyze_bp.route("/result/detail/update", methods=["PUT"])
 def update_detail():
     result_id = request.form.get("result_id")
-    detail = request.form.get('detail')
+    detail = request.form.get("detail")
     print(detail, result_id)
     # 数据校验
     if not detail or not result_id:
