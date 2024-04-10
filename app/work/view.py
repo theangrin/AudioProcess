@@ -21,7 +21,7 @@ CORS(
 @work_bp.route("/upload_media", methods=["POST"])
 def upload_file():
     session_id = request.headers.get("session-id")
-    file = request.files.get("media_file")
+    file = request.files.get("file")
 
     if not file:
         return make_json_response({"ok": False, "msg": "上传文件为空"}, 400)
