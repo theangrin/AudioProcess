@@ -57,8 +57,8 @@ def save_audio(file, file_name):
 
 @analyze_bp.route("/wx/detail", methods=["GET"])
 def wx_detail():
-    file_path = request.form["path"]
-    user_id = request.form["hash_string"]
+    file_path = request.form["file"]
+    user_id = request.form["session-id"]
     # 数据校验
     if not file_path:
         flash("请求参数为空")
@@ -86,20 +86,19 @@ def wx_detail():
     result = Result(user_id, detail, file_name)
     db.session.add(result)
     db.session.commit(result)
-
     return jsonify({"id": result.id, "detail": result.detail})
 
 
 # 受文心一言本身限制，接口合并
 @analyze_bp.route("/work", methods=["POST"])
 def work():
-    # session_id = request.headers.get("X-Bd-Plugin-Sessionidhash")
-    # result_id = request.headers.get("result_id")
-    session_id = "test"
-    result_id = 0
+    session_id = request.headers.get("X-Bd-Plugin-Sessionidhash")
+    result_id = request.headers.get("result_id")
     print(session_id)
-    print(result_id)
+    # session_id = "test"
+    # result_id = 0
     if not result_id:
+        print("no result_id")
         # 如果没有结果，则为第一次调用接口，需要先上传音频文件
         return make_json_response(
             {
@@ -133,7 +132,7 @@ def work():
 
 ✨（｡ӧ◡ӧ｡）💫
 
-若要获取详细分析信息，或者想进行更多操作，请点击[此链接]({FrontEndConfig.FRONTEND_URL}/{work.file_type}/{session_id})。
+若要获取详细分析信息，或者想进行更多操作，请点击[此链接]({FrontEndConfig.FRONTEND_URL}/{work.file_type}/{session_id}/{result.id})。
     """
             }
         )
@@ -145,9 +144,11 @@ def work():
 @analyze_bp.route("/result/detail", methods=["POST"])
 def get_detail():
     # 获取用户信息
-    user_id = request.headers.get("user_id")
+    session_id = request.headers.get("session_id")
     # 获取音频文件
-    file = request.files.get("audioFile")
+    file = request.files.get("file")
+    print('sessionid:',session_id)
+
 
     print(request.files)
 
@@ -163,9 +164,10 @@ def get_detail():
     detail = asr(file_path)
 
     # 数据库记录信息
-    result = Result(judge_user(user_id), detail, file_path, file.filename)
+    result = Result(judge_user(session_id), detail, file_path, file.filename)
     db.session.add(result)
     db.session.commit()
+    print(detail)
 
     return jsonify({"id": result.id, "detail": result.detail})
 
