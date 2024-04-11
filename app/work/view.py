@@ -59,8 +59,8 @@ def upload_file():
 #     return make_json_response(result.detail, 200)
 
 
-@work_bp.route("/get_markdown", methods=["GET"])
-def get_markdown():
-    session_id = request.headers.get("session-id")
-    work = Work.query.filter_by(session_id=session_id).first()
-    return make_json_response({"data": work.markdown}, 200)
+# @work_bp.route("/get_markdown", methods=["GET"])
+# def get_markdown():
+#     session_id = request.headers.get("session-id")
+#     work = Work.query.filter_by(session_id=session_id).first()
+#     return make_json_response({"data": work.markdown}, 200)

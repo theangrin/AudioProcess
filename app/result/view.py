@@ -221,3 +221,11 @@ def get_detail():
     print(pickle.loads(result.detail))
     # return make_json_response(named_tuple_to_json_str(result.detail))
     return jsonify(pickle.loads(result.detail).to_dict())
+
+
+@analyze_bp.route("/get_summary", methods=["GET"])
+def get_markdown():
+    session_id = request.headers.get("session_id")
+    result_id = request.headers.get("result_id")
+    result = Result.query.filter_by(id=result_id).first()
+    return make_json_response({"data": result.summary}, 200)
