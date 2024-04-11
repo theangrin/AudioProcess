@@ -20,6 +20,13 @@ class AsrResult(NamedTuple):
     num_speakers: int
     sentences: list[Sentence]
 
+    def to_dict(self):
+        return {
+            'sentences': self.sentences,
+            'full_text': self.full_text,
+            'num_speakers': self.num_speakers
+        }
+
 
 class ASR:
     def __init__(self, pyannote_token: str = AlgorithmConfig.PYANNOTE_TOKEN) -> None:

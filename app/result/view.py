@@ -1,10 +1,12 @@
+import json
 import os
 from datetime import datetime
 from urllib.parse import urlparse, unquote
 
 import requests
 import soundfile
-from flask import request, flash, jsonify
+from flask import request, flash, jsonify, send_file
+from flask_cors import CORS
 from werkzeug.utils import secure_filename
 
 from app import db
@@ -13,10 +15,8 @@ from app.algorithms.ernie import ernie
 from app.plugin.plugin import make_json_response
 from app.result import analyze_bp
 from app.result.model import Result
-from app.user.view import judge_user
-from config import FrontEndConfig
 
-from flask_cors import CORS
+from config import FrontEndConfig
 
 CORS(analyze_bp, resources={r"/*": {"origins": "https://yiyan.baidu.com"}})
 
@@ -45,11 +45,11 @@ def save_audio(file, file_name):
 
     # 完整的文件路径
     full_path = os.path.join(time_package, safe_filename)
+    path = '..\\audio\\' + current_time + '\\' + safe_filename
 
     soundfile.write(full_path, data, samplerate)
 
-    print(full_path)
-    return full_path
+    return [full_path, path]
 
 
 """文心一言：获取详细结果"""
@@ -94,11 +94,11 @@ def wx_detail():
 def work():
     session_id = request.headers.get("X-Bd-Plugin-Sessionidhash")
     result_id = request.headers.get("result_id")
-    print(session_id)
-    # session_id = "test"
-    # result_id = 0
-    if not result_id:
-        print("no result_id")
+    print('work-sessionid:', session_id)
+    print('work-resultid:', result_id)
+    results = Result.query.filter_by(user_id=session_id).all()
+    if not results:
+        print("no result")
         # 如果没有结果，则为第一次调用接口，需要先上传音频文件
         return make_json_response(
             {
@@ -115,13 +115,13 @@ def work():
         )
     else:
         # 分析结果并返回概要信息和result_id
-        # result = Result.query.filter_by(user_id=session_id).first()
-        result = Result.query.filter_by(id=result_id).first()
+        result = results[-1]
+        print(result.id, result.detail)
 
         prompt = request.json["prompt"]
 
         # 文心一言分析概要
-        result.summary = ernie(result.detail, prompt)
+        result.summary = ernie(pickle.loads(result.detail).full_text, prompt)
 
         db.session.commit()
 
@@ -132,7 +132,7 @@ def work():
 
 ✨（｡ӧ◡ӧ｡）💫
 
-若要获取详细分析信息，或者想进行更多操作，请点击[此链接]({FrontEndConfig.FRONTEND_URL}/{work.file_type}/{session_id}/{result.id})。
+若要获取详细分析信息，或者想进行更多操作，请点击[此链接]({FrontEndConfig.FRONTEND_URL}/{result.file_type}/{session_id}/{result.id})。
     """
             }
         )
@@ -142,13 +142,12 @@ def work():
 
 
 @analyze_bp.route("/result/detail", methods=["POST"])
-def get_detail():
+def result_detail():
     # 获取用户信息
     session_id = request.headers.get("session_id")
     # 获取音频文件
     file = request.files.get("file")
-    print('sessionid:',session_id)
-
+    print('resultdetail-sessionid:', session_id)
 
     print(request.files)
 
@@ -158,18 +157,24 @@ def get_detail():
         return "error"
     # 临时保存音频
     file_path = save_audio(file, file.filename)
+    full_path = file_path[0]
+    relative_path = file_path[-1]
+    print('resultdetail-fullpath', file_path)
+    print('resultdetail-fullpath', full_path)
+    print('resultdetail-relativepath', relative_path)
 
     # 调用算法
     asr = ASR()
-    detail = asr(file_path)
+    detail = asr(full_path)
 
     # 数据库记录信息
-    result = Result(judge_user(session_id), detail, file_path, file.filename)
+    result = Result(session_id, pickle.dumps(detail), relative_path, file.filename, file.mimetype[:file.mimetype.index("/")])
     db.session.add(result)
     db.session.commit()
-    print(detail)
+    print('resultdetail-detail', pickle.dumps(detail))
+    print('resultdetail-filetype', result.file_type)
 
-    return jsonify({"id": result.id, "detail": result.detail})
+    return jsonify({"id": result.id, "detail": detail})
 
 
 """网站：修改详细结果"""
@@ -191,3 +196,28 @@ def update_detail():
     db.session.commit()
 
     return "success"
+
+
+@analyze_bp.route("/get_media/<session_id>/<result_id>", methods=["GET"])
+def get_media(session_id, result_id):
+    print('getmedia-sessionid:', session_id)
+    print('getmedia-resultid:', result_id)
+
+    result = Result.query.filter_by(id=result_id).first()
+
+    print("getmediapath:", result.file_path)
+    return send_file(result.file_path)
+
+import pickle
+@analyze_bp.route("/get_detail", methods=["GET"])
+def get_detail():
+    session_id = request.headers.get("session_id")
+    result_id = request.headers.get("result_id")
+    print('getdetail-sessionid:', session_id)
+
+    result = Result.query.filter_by(id=result_id).first()
+
+    print("getdetail:", result.detail)
+    print(pickle.loads(result.detail))
+    # return make_json_response(named_tuple_to_json_str(result.detail))
+    return jsonify(pickle.loads(result.detail).to_dict())

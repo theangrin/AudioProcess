@@ -4,6 +4,7 @@ from flask import request, send_file
 from flask_cors import CORS
 
 from app import db
+from app.result.model import Result
 from app.work import work_bp
 from app.work.worker import worker
 from app.work.model import Work
@@ -42,18 +43,20 @@ def upload_file():
     return make_json_response({"ok": True}, 200)
 
 
-@work_bp.route("/get_media", methods=["GET"])
-def get_media():
-    session_id = request.headers.get("session-id")
-    work = Work.query.filter_by(session_id=session_id).first()
-    return send_file(work.file_path)
-
-
-@work_bp.route("/get_detail", methods=["GET"])
-def get_detail():
-    session_id = request.headers.get("session-id")
-    work = Work.query.filter_by(session_id=session_id).first()
-    return make_json_response(work.detail, 200)
+# @work_bp.route("/get_media", methods=["GET"])
+# def get_media():
+#     session_id = request.headers.get("session-id")
+#     result = Result.query.filter_by(user_id=session_id).first()
+#     print("getmediapath:", result.file_path)
+#     return send_file(result.file_path)
+#
+#
+# @work_bp.route("/get_detail", methods=["GET"])
+# def get_detail():
+#     session_id = request.headers.get("session-id")
+#     result = Result.query.filter_by(user_id=session_id).first()
+#     print("getdetail:",result.detail)
+#     return make_json_response(result.detail, 200)
 
 
 @work_bp.route("/get_markdown", methods=["GET"])
